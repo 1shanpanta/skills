@@ -4,10 +4,10 @@ If an argument is passed, that's the target URL. If no argument, ask for the URL
 
 ## Audit Process
 
-1. **Fetch the page** using browser tools or WebFetch. Get the full HTML source.
+1. **Fetch the page** and get the full HTML source.
 2. **Run every check below** against the live page.
 3. **Report findings** in a structured table: status (PASS/FAIL/WARN), category, details.
-4. **Identify the local project** — find the codebase in the current working directory (or ask if unclear).
+4. **Identify the local project** -- find the codebase in the current working directory (or ask if unclear).
 5. **Apply code fixes** for all FAIL and WARN items that can be fixed in source code.
 6. **Skip** anything that's third-party/infrastructure (Vercel headers, CDN compression, TLS config).
 7. **Build/type-check** after all fixes to confirm nothing is broken.
@@ -37,7 +37,8 @@ If an argument is passed, that's the target URL. If no argument, ask for the URL
 - [ ] `robots.txt` exists and returns 200
 - [ ] `sitemap.xml` exists and returns 200
 - [ ] `robots.txt` references the sitemap
-- [ ] Render-blocking resources — flag non-critical CSS/JS that blocks first paint
+- [ ] Page is served over HTTPS
+- [ ] No render-blocking resources (non-critical CSS/JS should be deferred)
 - [ ] Google Fonts or external fonts use `preconnect` and non-blocking loading
 
 ### Open Graph (Social Previews)
@@ -89,7 +90,7 @@ If an argument is passed, that's the target URL. If no argument, ask for the URL
 - [ ] No JavaScript console errors on page load
 - [ ] No failed network requests (4xx/5xx) on page load
 - [ ] No broken assets (CSS, JS, images, fonts all return 200)
-- [ ] Auth hydration endpoints return 200 (not 401) for anonymous users
+- [ ] Auth or API endpoints used during page load return 200 (not 401/403) for anonymous visitors
 
 ## Report Format
 
