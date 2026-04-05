@@ -7,7 +7,7 @@ If an argument is passed, that's the target URL. If no argument, ask for the URL
 1. **Fetch the page** using browser tools or WebFetch. Get the full HTML source.
 2. **Run every check below** against the live page.
 3. **Report findings** in a structured table: status (PASS/FAIL/WARN), category, details.
-4. **Identify the local project** -- find the codebase in the current working directory (or ask if unclear).
+4. **Identify the local project** — find the codebase in the current working directory (or ask if unclear).
 5. **Apply code fixes** for all FAIL and WARN items that can be fixed in source code.
 6. **Skip** anything that's third-party/infrastructure (Vercel headers, CDN compression, TLS config).
 7. **Build/type-check** after all fixes to confirm nothing is broken.
@@ -18,9 +18,15 @@ If an argument is passed, that's the target URL. If no argument, ask for the URL
 ### Meta Information
 - [ ] `<title>` exists and is 30-60 characters
 - [ ] `<meta name="description">` exists and is 50-160 characters
+- [ ] `<meta name="viewport">` is set (typically `width=device-width, initial-scale=1`)
 - [ ] `<meta name="robots">` directive exists
 - [ ] `<html lang="...">` attribute is set
 - [ ] Canonical URL is defined (`<link rel="canonical">` or meta)
+
+### Content Structure
+- [ ] Exactly one `<h1>` tag exists on the page
+- [ ] Heading hierarchy is valid (no skipped levels, e.g. h1 -> h3 without h2)
+- [ ] All images have `alt` attributes
 
 ### Favicon & Icons
 - [ ] Favicon link tag exists and the file returns HTTP 200
@@ -31,13 +37,14 @@ If an argument is passed, that's the target URL. If no argument, ask for the URL
 - [ ] `robots.txt` exists and returns 200
 - [ ] `sitemap.xml` exists and returns 200
 - [ ] `robots.txt` references the sitemap
-- [ ] Render-blocking resources -- flag non-critical CSS/JS that blocks first paint
+- [ ] Render-blocking resources — flag non-critical CSS/JS that blocks first paint
 - [ ] Google Fonts or external fonts use `preconnect` and non-blocking loading
 
 ### Open Graph (Social Previews)
 - [ ] `og:title` exists (10-70 chars, ideally 40-60)
 - [ ] `og:description` exists (50-200 chars, ideally 110-160)
 - [ ] `og:image` exists with absolute URL (ideally 1200x630px)
+- [ ] `og:image` quality: dimensions are 1200x630, aspect ratio ~1.91:1, file size under 5MB
 - [ ] `og:url` exists with absolute URL
 - [ ] `og:type` exists (usually "website")
 
@@ -57,23 +64,31 @@ If an argument is passed, that's the target URL. If no argument, ask for the URL
 - [ ] `<meta name="theme-color">` is set
 - [ ] Manifest includes name, short_name, icons, start_url, display
 
+### Links
+- [ ] No broken internal links (all return 200)
+- [ ] No broken external links
+- [ ] All links use non-empty `href` values (no `href=""` or `href="#"` on navigation links)
+
 ### Accessibility Basics
 - [ ] Semantic landmarks exist: `<header>`, `<nav>`, `<main>`, `<footer>`
-- [ ] All form `<input>` elements have associated `<label>` (via `htmlFor`/`id`)
+- [ ] All form `<input>` elements have associated `<label>` (via `htmlFor`/`id`, `aria-label`, or `aria-labelledby`)
 - [ ] All interactive elements (buttons, links) are at least 48x48px tap targets
-- [ ] Images have `alt` attributes
-- [ ] Skip-to-content link exists (for multi-page apps with navbars)
+- [ ] Skip-to-content link exists and is functional (for multi-page apps with navbars)
 - [ ] Color contrast meets WCAG AA (4.5:1 for normal text, 3:1 for large)
 
-### Performance & CLS
+### Performance & Core Web Vitals
+- [ ] Largest Contentful Paint (LCP) under 2.5s
+- [ ] Cumulative Layout Shift (CLS) under 0.1
+- [ ] Total Blocking Time (TBT) under 200ms
 - [ ] External fonts use `font-display: swap` or `optional`
 - [ ] Font fallback metrics are defined (`size-adjust`, `ascent-override`) to reduce layout shift
 - [ ] Images/embeds have explicit dimensions or `aspect-ratio` to reserve space
 - [ ] No layout-shifting content injected above the fold after load
 
-### Runtime Errors
+### Runtime Errors & Broken Assets
 - [ ] No JavaScript console errors on page load
 - [ ] No failed network requests (4xx/5xx) on page load
+- [ ] No broken assets (CSS, JS, images, fonts all return 200)
 - [ ] Auth hydration endpoints return 200 (not 401) for anonymous users
 
 ## Report Format
