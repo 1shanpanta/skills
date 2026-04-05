@@ -10,10 +10,10 @@ Full SEO, accessibility, and social preview audit. Point it at any URL and it wi
 
 ## Usage
 
-Copy into your commands directory:
+Copy the skill folder into your skills directory:
 
 ```bash
-cp seo/SKILL.md ~/.claude/commands/seo.md
+cp -r seo ~/.claude/skills/seo
 ```
 
 Then in Claude Code:
