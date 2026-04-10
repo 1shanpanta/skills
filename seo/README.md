@@ -1,22 +1,14 @@
 # /seo
 
-Full SEO, accessibility, and social preview audit. Point it at any URL and it will:
+Audits a URL for SEO, accessibility, and social previews. Checks meta tags, Open Graph, Twitter cards, structured data, favicons, landmarks, contrast, tap targets, and performance. Reports findings and applies fixes to your codebase.
 
-- Audit meta tags, Open Graph, Twitter cards, structured data, favicons, PWA metadata
-- Check accessibility basics (landmarks, labels, tap targets, contrast)
-- Flag performance and CLS issues
-- Report findings in a structured table
-- Apply fixes directly to your codebase
-
-## Usage
-
-Copy the skill folder into your skills directory:
+## Install
 
 ```bash
 cp -r seo ~/.claude/skills/seo
 ```
 
-Then in Claude Code:
+## Usage
 
 ```
 /seo https://your-site.com

@@ -1,49 +1,18 @@
 # /log
 
-Save a detailed session recap to a rolling log file. Type `/log` at the end of any coding session and it captures everything -- what you worked on, decisions made, dead ends, blockers, next steps, and project state.
+Writes a detailed session entry to `~/.claude/projects/<project-path>/memory/session_log.md`. Captures what you worked on, decisions, dead ends, blockers, and next steps. Keeps the last 8 entries.
 
-Next time you open the project, Claude reads the log and picks up where you left off. No re-explaining, no wasted context.
+Next time you open the project, Claude reads the log and picks up where you left off.
 
-- Writes to `~/.claude/projects/<project-path>/memory/session_log.md`
-- Keeps the last 8 entries, oldest rotates out
-- Creates the file automatically if it doesn't exist
-- Updates topic memories when session decisions should be permanent
+If you set goals with `/goal`, they get archived into the entry with final status and then cleared.
 
-Each entry includes:
-
-- Summary of the session
-- What was worked on (detailed, not just bullet points)
-- Key decisions and reasoning
-- Code changes made and files touched
-- Blockers and open questions
-- Dead ends (so you don't retry failed approaches)
-- Dependencies and external context
-- Current project state snapshot
-- Prioritized next steps
-- Momentum check
-
-## Setup
-
-### 1. Install the skill
-
-Copy the skill folder into your commands directory:
-
-```bash
-cp -r log ~/.claude/commands/
-# rename SKILL.md to log.md
-mv ~/.claude/commands/log/SKILL.md ~/.claude/commands/log.md
-rm -r ~/.claude/commands/log
-```
-
-Or just copy the file directly:
+## Install
 
 ```bash
 cp log/SKILL.md ~/.claude/commands/log.md
 ```
 
-### 2. Add the read instruction to your global CLAUDE.md
-
-This is required so Claude actually reads the log at the start of each conversation. Add this to `~/.claude/CLAUDE.md`:
+Add this to `~/.claude/CLAUDE.md` so Claude actually reads the log on startup:
 
 ```
 Session Log
@@ -57,14 +26,8 @@ Use this context to pick up where we left off without asking the user to
 re-explain things.
 ```
 
-Without this step, the log file gets written but never read back. Both pieces are needed.
-
 ## Usage
-
-At the end of a session:
 
 ```
 /log
 ```
-
-That's it. Claude reviews the full conversation and writes a detailed entry.
