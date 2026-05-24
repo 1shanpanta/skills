@@ -1,6 +1,6 @@
 ---
 name: atomic-plan
-description: Break a complex multi-step plan into the smallest atomic steps, render as a visual HTML artifact, then execute one step at a time with explicit user approval before AND after each step. Each atomic step has a single owner, a single verifiable outcome, and commit-sized scope. Decisions surface inline at the step that depends on them, never bundled upfront. Use when the user says "atomic plan", "/atomic-plan", "atomic-plan this", "break this into atomic steps", "smallest atomic pieces", "ask before each step", "ask question before each atomic step", "step-by-step with check-ins", or "let's do this slowly with check-ins". Different from /autoplan (parallel reviews) and /plan-eng-review (plan critique): atomic-plan executes an existing plan slowly with max oversight.
+description: Break a complex multi-step plan into the smallest atomic steps, render as a visual HTML artifact, then execute one step at a time with explicit user approval before AND after each step. Each atomic step is self-contained (its description, files, and verify check do not reference other steps) and has a single owner, a single verifiable outcome, and commit-sized scope. Decisions surface inline at the step that depends on them, never bundled upfront. Use when the user says "atomic plan", "/atomic-plan", "atomic-plan this", "break this into atomic steps", "smallest atomic pieces", "ask before each step", "ask question before each atomic step", "step-by-step with check-ins", or "let's do this slowly with check-ins". Different from /autoplan (parallel reviews) and /plan-eng-review (plan critique): atomic-plan executes an existing plan slowly with max oversight.
 ---
 
 # atomic-plan
@@ -53,6 +53,7 @@ Each step MUST satisfy all five rules:
 3. **A named, small set of files.** Use `+ path` for new, `~ path` for modified, `- path` for deleted. Avoid "various files" or "the relevant tests".
 4. **Commit-sized or less.** If a step deserves its own commit, it's right. If two steps would be one commit, merge them.
 5. **Not subdivisible without losing meaning.** "Set up Python venv + install deps" is atomic. "Run the Python script" might be subdivisible into "write the function" + "run it" if those are different days of work.
+6. **Self-contained.** The step's description, files, and verify check do not reference other steps. Step 2 must not say "using the schema from step 1" or "after step 3 finishes". It states its own action, its own files, and its own preconditions inline. Ordering between steps is allowed (step 2 can still run after step 1), but cross-references in the step text are not. If a step truly cannot be understood without another step's context, merge them or restate the precondition in the step's own description.
 
 ### Step 1.4: Capture per-step metadata
 
@@ -157,6 +158,7 @@ If the user wants to skip ahead, redirect, or pause, do that. Update the HTML de
 - **Stop on pushback.** Any "why", "wait", "I don't think" pauses execution.
 - **Be terse.** No filler praise ("Great question!"). No em-dashes. Get to substance.
 - **HTML for the visual artifact.** Markdown for chat updates. Don't confuse the two.
+- **Each step stands alone.** A step's text must not reference other steps. No "after step N", no "using the output from step N", no "continues the work from step N". If the step cannot be understood without that reference, merge the steps or restate the precondition inline.
 - **Each step revertible without unwinding others.** If step N depends on step N-1 in a way that makes rollback cascade, split the steps further.
 - **No commits during a step unless the step explicitly says "commit at the end".** Default is no commit; let work accumulate, commit at logical checkpoints.
 
@@ -173,6 +175,7 @@ If the user wants to skip ahead, redirect, or pause, do that. Update the HTML de
 
 - Asking 5 upfront questions ("answer these before step 1"). Decisions surface inline.
 - Generating a 20-step plan that's secretly 5 atomic steps padded out. Steps must be genuinely atomic.
+- Cross-referencing other steps in a step's description ("builds on step 2", "uses what we did in step 4"). Each step must be readable on its own; restate any preconditions inline.
 - Skipping the restate step on rapid approval. Always restate, even briefly.
 - Continuing after a "wait" or "why". Always pause and discuss.
 - Bundling commits across multiple steps. Each step is its own commit, or no commit at all.
