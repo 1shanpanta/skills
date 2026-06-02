@@ -37,7 +37,7 @@ Map the repo path to its transcript folder:
 
 Find the day's transcripts:
 - Default (today / this evening): `find ~/.claude/projects/<slug> -maxdepth 1 -name '*.jsonl' -mtime -1` (sessions active in the last 24h). Also `ls -lat` the folder to eyeball which sessions are in range.
-- For a specific past date or range: list all `*.jsonl` and rely on the per-file subagent (section 3) to keep only events whose timestamp matches the target date. Avoid fragile shell date math.
+- For a specific past date or range: list all `*.jsonl` and have the digest step (3a) keep only lines whose `.timestamp` starts with the target date (add `select((.timestamp//"")|startswith("<date>"))` to the jq). Avoid fragile shell date math.
 
 ## 2. Gather sources
 Primary source: the session transcripts above. The richest learnings (dead ends, "oh, the CDN overrode it" moments, debugging detours, wrong turns) live in the conversation, NOT in commits. Some of the best learning days produce zero commits.
@@ -46,12 +46,33 @@ Corroborate with:
 - `git -C <repo> log --since="<date> 00:00" --oneline` and the working diff, to ground the narrative and catch work you might not remember.
 - If invoked from the session that did the work, you already have it in your live context, so use that too; the active transcript on disk may be missing the latest turns.
 
-## 3. Distill (fan out for large transcripts)
-Transcripts can be several MB. For each transcript file, spawn a subagent in parallel (Agent tool, general-purpose) so you don't flood your own context. Give each this brief:
+## 3. Distill (cheap: pre-filter to a digest, then a small model reads it)
+NEVER feed a raw `.jsonl` to a model. A transcript is 80%+ tool-result blobs (file contents, greps, build output, base64) with near-zero learning signal; raw, a heavy day is 1M+ tokens. Pre-filter first, then read the digest on a cheap model. Opus only does the final merge.
 
-> Read the JSONL transcript at `<path>`. Consider only events from `<date>`. Focus lens: `<lens>` - surface knowledge of that kind first and drop points outside it (skip this filter only if the lens is Everything). Extract the TRANSFERABLE knowledge the human gained: portable principles, tools/commands/flags learned, traps and wrong assumptions, and genuinely reusable domain facts. For each, give a one-line lesson plus a few words on where it came from. Apply the Lesson Test: a point qualifies only if it would help on a DIFFERENT project. Discard project-specific facts unless you can rewrite them into a portable principle. Return a compact bulleted list grouped by: Principles, Tools & techniques, Traps & time-sinks, Domain notes. No project status, no feature recaps.
+**3a. Build a compact digest per transcript (no model, pure shell).** For each transcript file `$F`, run this jq pass. It keeps only the human turns, the assistant's prose, and tool-call headlines, dropping tool outputs and thinking. It compresses roughly 45x (a 2.3MB transcript becomes ~50KB):
 
-Then merge all subagent outputs, dedupe near-identical points, and apply the altitude rubric yourself before writing the final answer.
+```bash
+DIGEST="${TMPDIR:-/tmp}/eod-$(basename "$F" .jsonl).txt"
+jq -rc '
+  if .type=="user" and (.isMeta|not) then
+    (.message.content |
+      if type=="string" then ("USER: " + (gsub("\n";" ")|.[:600]))
+      else (.[]? | select(.type=="text") | "USER: " + (.text|gsub("\n";" ")|.[:600])) end)
+  elif .type=="assistant" then
+    (.message.content[]? |
+      if .type=="text" then ("ASSISTANT: " + (.text|gsub("\n";" ")|.[:800]))
+      elif .type=="tool_use" then ("TOOL " + .name + ": " + ((.input|tostring)|gsub("\n";" ")|.[:200]))
+      else empty end)
+  else empty end
+' "$F" > "$DIGEST"
+```
+(For a specific date, insert `select((.timestamp//"")|startswith("<date>")) |` right after the first `'` to keep only that day's lines.)
+
+**3b. Distill the digest(s) on a CHEAP model.** Reading is grunt work; do not spend Opus on it. Spawn the distillation subagent(s) with `model: 'haiku'` (fall back to `'sonnet'` only if Haiku misses nuance). Digests are tiny, so prefer ONE cheap subagent over all of today's digests; fan out per-digest only if the combined size is large (> ~150KB) or the range is a full week. Brief:
+
+> Read the digest file(s) at `<paths>`. Each is a pre-filtered session: lines tagged `USER:` (the human's turns), `ASSISTANT:` (my prose), and `TOOL <name>:` (tool-call headlines). Focus lens: `<lens>` - surface knowledge of that kind first and drop points outside it (skip the filter only if the lens is Everything). Extract the TRANSFERABLE knowledge the human gained: portable principles, tools/commands/flags learned, traps and wrong assumptions, genuinely reusable domain facts. For each, give a one-line lesson plus a few words on where it came from. Apply the Lesson Test: a point qualifies only if it would help on a DIFFERENT project. Discard project-specific facts unless you can rewrite them into a portable principle. Return a compact bulleted list grouped by: Principles, Tools & techniques, Traps & time-sinks, Domain notes. No project status, no feature recaps.
+
+**3c. Merge on the main model.** You (Opus) take the cheap model's compact output, dedupe near-identical points, apply the altitude rubric (section 4), and write the final answer. You never read the raw transcripts yourself. Delete the temp digests when done.
 
 ## 4. The Lesson Test (altitude rubric - the whole point)
 A candidate is a real learning only if it transfers to a different project, team, or stack. Rewrite every project-specific observation into its portable form. If it can't be rewritten that way, cut it.
