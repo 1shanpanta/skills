@@ -12,3 +12,4 @@ Custom slash commands for [Claude Code](https://claude.ai/code). Each skill is a
 | [hackathon-radar](./hackathon-radar) | Finds open crypto/AI hackathons and suggests what to build |
 | [de-slop](./de-slop) | Cleans dead code, weak types, and AI slop with 8 parallel subagents |
 | [atomic-plan](./atomic-plan) | Breaks a plan into atomic steps and runs them one at a time with approval before and after each |
+| [eod](./eod) | End-of-day: mines a repo's session transcripts for the transferable engineering lessons you gained, with a customizable focus lens |
