@@ -15,3 +15,4 @@ Custom slash commands for [Claude Code](https://claude.ai/code). Each skill is a
 | [eod](./eod) | End-of-day: mines a repo's session transcripts for the transferable engineering lessons you gained, with a customizable focus lens |
 | [ui-laws](./ui-laws) | Audits or designs a UI against the 30 laws of UX, one law and one fix per finding |
 | [swap-profile](./swap-profile) | Moves every claude pane in a herdr tab onto another account profile, context kept, when one account hits its limit |
+| [copy-writing](./copy-writing) | Sixteen rules for ad and product copy that does not read as AI-written, with a pre-delivery checklist |
