@@ -17,3 +17,4 @@ Custom slash commands for [Claude Code](https://claude.ai/code). Each skill is a
 | [swap-profile](./swap-profile) | Moves every claude pane in a herdr tab onto another account profile, context kept, when one account hits its limit |
 | [copy-writing](./copy-writing) | Sixteen rules for ad and product copy that does not read as AI-written, with a pre-delivery checklist |
 | [muse](./muse) | Plans here, then hands the code, the diff read, the tests and the fixes to a free worker model through opencode |
+| [app-install](./app-install) | Finds the real phones attached to this computer, pairs one over Wi-Fi when no cable is in, installs the Expo build and keeps it current |
