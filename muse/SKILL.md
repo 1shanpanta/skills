@@ -1,13 +1,13 @@
 ---
 name: muse
-description: Hand implementation work to a worker model through opencode, while this session keeps the plan and the spec. Load when the user says "/muse", "use muse", "muse it", "give this to muse", "run it on muse", "hand it to muse", "delegate this", "orchestrate this", or asks for the plan here and the code on a cheaper model.
+description: Hand implementation work to a worker model through opencode, while this session keeps the plan and the review. Load when the user says "/muse", "use muse", "muse it", "give this to muse", "run it on muse", "hand it to muse", "delegate this", "orchestrate this", or asks for the plan here and the code on a cheaper model.
 ---
 
 # Muse worker
 
-This session writes the plan and the spec. A worker model writes the code, reads
-its own diff, runs the build and the tests, and fixes what fails. The bridge is
-`scripts/muse` in this skill folder. It runs `opencode run` headless.
+This session plans and reviews. A worker model writes the code, reads its own
+diff, runs the build and the tests, fixes what fails, and reports the proof. The
+bridge is `scripts/muse` in this skill folder. It runs `opencode run` headless.
 
 The default worker is `opencode/muse-spark-1.3-contributor-free` at variant
 `xhigh`: 1,048,576 token context, 131,072 token output, zero cost on the
@@ -26,11 +26,21 @@ tier.
 | Read `git diff` | worker |
 | Run the build, the type check and the tests | worker |
 | Fix what fails, then run the command again | worker |
-| Read the worker's final output block | this session |
+| Write the final block: the command and its output | worker |
+| Review that block | this session |
+
+This session does two things: it plans, and it reviews. Everything between those
+two belongs to the worker.
 
 The worker is not finished when the code is written. It is finished when the
 acceptance command passes and the output of that command is in its last message.
 Write that rule into every spec.
+
+The review reads the last output block, the acceptance command and its result.
+When the review finds a problem, the correction goes back to the worker with
+`-c`. Never patch it here: a fix written in this session costs the tokens the
+delegation just saved, and the worker's session then holds code it did not
+write.
 
 ## Pick the worker
 
@@ -84,10 +94,10 @@ move the plan.
    the repo, in a scratch directory: `<scratch>/muse-<slug>.md`.
 3. Run the worker:
    `scripts/muse --dir <repo> <scratch>/muse-<slug>.md`
-4. Read the last block of the worker's output: the acceptance command and its
+4. Review the last block of the worker's output: the acceptance command and its
    result. Read nothing else.
-5. Send corrections to the same worker session:
-   `scripts/muse --dir <repo> -c -m "<correction>"`
+5. Send every correction to the same worker session, and let it fix its own
+   work: `scripts/muse --dir <repo> -c -m "<correction>"`
 
 ## Spec file shape
 
