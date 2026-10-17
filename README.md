@@ -15,4 +15,4 @@ Custom slash commands for [Claude Code](https://claude.ai/code). Each skill is a
 | [swap-profile](./swap-profile) | Moves every claude pane in a herdr tab onto another account profile, context kept, when one account hits its limit |
 | [app-install](./app-install) | Finds the real phones attached to this computer, pairs one over Wi-Fi when no cable is in, installs the Expo build and keeps it current |
 | [pre-launch](./pre-launch) | Audits an app against a 154-item checklist before it meets a paying customer, with PASS, FAIL, UNKNOWN or N/A and repo evidence for each item |
-| [anti-ai](./anti-ai) | Scans any writing, design or code for the signs of AI-made work, lists each one with the exact quote, asks before removing, then removes it. Includes the 16 copy rules and the 8-agent code cleanup pass |
+| [anti-ai](./anti-ai) | Scans any writing, design or code for the signs of AI-made work, lists each one with the exact quote, asks before removing, then removes it |
