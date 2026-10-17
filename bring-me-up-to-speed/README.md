@@ -32,3 +32,18 @@ Use `grill-me` to figure out what to build. Use `bring-me-up-to-speed` to unders
 
 - A running checklist doc (e.g. `docs/up-to-speed.md`) showing the path and what is left.
 - An interactive chat session: restate, teach a step, quiz, check off, repeat, until mastery, then a closing summary.
+
+## How it works
+
+```mermaid
+flowchart TD
+    A["Find the subject<br/>handoff, git history, diff"] --> B["Write the running checklist"]
+    B --> C["Teach one step"]
+    C --> D["Quiz"]
+    D --> E{"Understood?"}
+    E -- "no" --> C
+    E -- "yes" --> F["Check it off"]
+    F --> G{"Items left?"}
+    G -- "yes" --> C
+    G -- "no" --> H["Closing summary"]
+```

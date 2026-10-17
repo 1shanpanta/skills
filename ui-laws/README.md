@@ -26,3 +26,18 @@ cp -r ui-laws ~/.claude/skills/ui-laws
 /ui-laws https://your-site.com
 /ui-laws design a checkout step for one saved card
 ```
+
+## How it works
+
+```mermaid
+flowchart TD
+    A["/ui-laws"] --> B{"Mode"}
+    B -- "AUDIT<br/>screenshot, URL, route, component" --> C["Name the screen's one job"]
+    C --> D["Look at the real thing and count"]
+    D --> E["Walk the 30 laws once"]
+    E --> F["Time any fetch against 400ms"]
+    F --> G["Keep only findings that change the build:<br/>law, cost, one fix"]
+    B -- "DESIGN<br/>screen not built yet" --> H["State the one job"]
+    H --> I["Answer the six layout questions"]
+    I --> J["Design the screen"]
+```

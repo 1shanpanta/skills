@@ -26,3 +26,18 @@ Use when you say "atomic plan", "break this into atomic steps", "smallest atomic
 
 - `<project-root>/<plan-name>-atomic-plan.html` opened in your browser.
 - Then per-step chat updates: restate, ask, execute, report, ask next.
+
+## How it works
+
+```mermaid
+flowchart TD
+    subgraph P1["Phase 1: breakdown, once"]
+        A["Read the source plan"] --> B["Split into atomic steps"] --> C["Build the HTML artifact"] --> D["Open it and STOP"]
+    end
+    subgraph P2["Phase 2: one step at a time"]
+        E["Restate the step"] --> F["Ask"] --> G{"Approved?"}
+        G -- "yes" --> H["Execute"] --> I["Report"] --> J["Ask about the next step"] --> E
+        G -- "no" --> F
+    end
+    D --> E
+```

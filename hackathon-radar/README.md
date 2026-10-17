@@ -16,3 +16,24 @@ cp -r hackathon-radar ~/.claude/skills/hackathon-radar
 /hackathon-radar
 /hackathon-radar DeFi agents
 ```
+
+## How it works
+
+```mermaid
+flowchart TD
+    Q["Pre-flight questions"] --> Phase1
+    subgraph Phase1["Phase 1: gather, parallel"]
+        A["Hackathon scout"]
+        B["Portfolio analyzer"]
+        C["Winner studier"]
+    end
+    subgraph Phase2["Phase 2: analyze, parallel"]
+        D["Theme deep-diver"]
+        E["Idea generator"]
+    end
+    Phase1 --> Phase2
+    Phase2 --> R["Opportunity ranker<br/>prize, deadline, reuse, competition, win odds, sponsor fit"]
+    R --> O["Ranked report"]
+```
+
+If one agent fails, the rest keep going.

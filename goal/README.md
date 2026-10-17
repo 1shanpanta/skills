@@ -32,3 +32,14 @@ cp goal/SKILL.md ~/.claude/commands/goal.md
 cp tldr/SKILL.md ~/.claude/commands/tldr.md   # updated to read goals
 cp log/SKILL.md ~/.claude/commands/log.md     # updated to archive goals
 ```
+
+## How it works
+
+```mermaid
+flowchart TD
+    A["/goal"] --> B{"Argument"}
+    B -- "messy text" --> C["Clean into checklist items"]
+    C --> D["Write Active Goals in session_log.md<br/>same day appends, new day replaces"]
+    B -- "none" --> E["Show the current goals"]
+    B -- "clear" --> F["Wipe the goals"]
+```
