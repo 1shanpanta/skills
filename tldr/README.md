@@ -1,6 +1,6 @@
 # /tldr
 
-Prints a session summary to the conversation. Reads the project's `session_log.md` for context from previous sessions and shows active goal progress if any are set via `/goal`.
+Prints a summary of the current session to the conversation. It reads only the current conversation: no `session_log.md`, no memory folder, no other session. Goals come from the conversation itself.
 
 Nothing gets written to disk.
 
@@ -14,17 +14,14 @@ cp tldr/SKILL.md ~/.claude/commands/tldr.md
 
 ## tldr vs log
 
-`/tldr` reads the session log and prints a summary. `/log` writes to the session log. Use `/tldr` to catch up, `/log` to save state.
+`/tldr` reads the current conversation and prints a summary. `/log` writes to the session log. Use `/tldr` to recap this session, `/log` to save state for the next one.
 
 ## How it works
 
 ```mermaid
 flowchart TD
-    A["/tldr"] --> B{"session_log.md exists?"}
-    B -- "yes" --> C["Project catch-up<br/>last entry, state, blockers, next steps"]
-    B -- "no" --> D["Skip the catch-up"]
-    C --> E["Session summary"]
-    D --> E
-    E --> F["Goal progress, if goals are set"]
-    F --> G["Print in chat, write nothing to disk"]
+    A["/tldr"] --> B["Read the current conversation only"]
+    B --> C["Infer the session goals and mark progress"]
+    C --> D["Session summary<br/>done, decisions, code changes, open, next time"]
+    D --> E["Print in chat, write nothing to disk"]
 ```

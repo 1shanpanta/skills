@@ -61,7 +61,7 @@ type: project
 - [ ] Goal one
 - [ ] Goal two
 
-_Run `/goal` to view, `/goal clear` to reset. Shows up in `/tldr` and `/log`._
+_Run `/goal` to view, `/goal clear` to reset. Shows up in `/log`, and in `/tldr` when set in the current conversation._
 ```
 
 ### Important
