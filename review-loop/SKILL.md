@@ -49,7 +49,7 @@ Give each one:
 ## Stop rules
 
 - **Done:** both reviewers reply `CLEAN` in the same round, on the code as it now stands. A `CLEAN` from before your last change does not count.
-- **Cap:** stop after five rounds. Report the open findings and why they stay open.
+- **No round cap.** Keep going while rounds find real defects. Report progress each round, so the user can stop the loop.
 - **Dispute:** if a reviewer repeats a finding you rejected with evidence, in two rounds in a row, stop and ask the user. Never keep arguing.
 - **Churn:** if a round only brings style findings, call it done and list them as skipped.
 

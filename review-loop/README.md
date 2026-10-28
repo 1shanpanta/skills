@@ -27,7 +27,7 @@ flowchart TD
     C -->|yes| D["Report: rounds, fixes,<br/>rejections, skipped"]
     C -->|no| E["Check each finding<br/>against the code"]
     E --> F["Fix, add a test,<br/>run the checks, commit"]
-    F --> G{"Round 5, or the same<br/>dispute twice?"}
+    F --> G{"The same dispute<br/>twice in a row?"}
     G -->|no| B
     G -->|yes| H["Stop and ask the user"]
 ```
